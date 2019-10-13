@@ -1,6 +1,6 @@
 # RegExp-demo
 
-> 这是一个正则表达式测试工具
+> 简单的转移字符
 
 ## Build Setup
 
