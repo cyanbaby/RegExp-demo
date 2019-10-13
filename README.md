@@ -1,6 +1,6 @@
 # RegExp-demo
 
-> 简单的转移字符
+> 字符类
 
 ## Build Setup
 

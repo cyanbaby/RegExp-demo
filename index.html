@@ -2,76 +2,127 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>简单的转移字符</title>
+	<title>字符类</title>
 </head>
 <body>
 
 
 <script>
-/*
-	var str = '//我是注释';
-	var pattern = /\/\//;
-	console.log(pattern.exec(str))
-//*/
-
-/*
-	var str = '\\\\';		// 这其实是2个\\
-	// console.log(str)
-	var pattern = /\\\\/;	// 这其实是匹配2条\\
-	console.log(pattern.exec(str))
-//*/
-
-/*
-	var str = 'nba';	
-	var pattern = /\n/;		// \n换行
-	console.log(pattern.exec(str))
-//*/
-
 
 /*
 
-	var str = '	js';	
-	var pattern = /\t/;		// tab键, 制表符
-	console.log(pattern.exec(str))
+	var str = 'javascript';
+	var pattern = /[jsfjadlkjf@jaiofi]/;		// []就是一个字符类:  匹配[]里任意一个字符, 顺序匹配,只匹配一个字符
+	// 弱水三千, 只取一瓢
+	console.log(pattern.exec(str))				// ["j", index: 0, input: "javascript", groups: undefined]
 
 
 //*/
 
+/*
+
+	var str = 'javascript';
+	var pattern = /[^js]/;						// []就是一个字符类: 也可以取反, 匹配除了j和s的任意字符
+	console.log(pattern.exec(str))				// ["a", ...  还是 弱水三千, 只取一瓢
+
+//*/
 
 /*
 
-	var str = 'a\nb';	
-	var pattern = /\x0A/;		// 用x0A表示 \n ASCII表可查
-	console.log(pattern.exec(str))
+	var str = 'javascript';
+	var pattern = /[a-z]/;						// 不可能写abc...xyz, 可以a-z写个范围
+	console.log(pattern.exec(str))				// ["j", ...  还是 弱水三千, 只取一瓢
+
+//*/
+
+/*
+
+	var str = 'javascript';
+	var pattern = /[c-e]/;						// a-z很灵活: 可以自定义范围,前面的只能相等或者小后面位置
+	console.log(pattern.exec(str))				// ["c", ...  还是 弱水三千, 只取一瓢
+
+
+//*/
+
+/*
+
+	var str = 'Alex衰';
+	var pattern = /[\u4e00-\u9fa5]/;						// 
+	console.log(pattern.exec(str))				// ["衰", ...  还是 弱水三千, 只取一瓢
+
+
+//*/
+
+/*
+
+	var str = 'Javascript';
+	var pattern = /[a-zA-Z]/;					// 也可以组合  []的意思就是匹配里面任意一个字符 
+	console.log(pattern.exec(str))				// ["J", ...  还是 弱水三千, 只取一瓢
 
 //*/
 
 
 /*
-	
-	var str = 'a\nb';	
-	var pattern = /\x61\x0A\x62/;		// 用x0A表示 \n  ASCII表可查
-	console.log(pattern.exec(str))
+
+	var str = '00544';
+	var pattern = /[0-9]/;						// 也可以组合  []的意思就是匹配里面任意一个字符 
+	console.log(pattern.exec(str))				// ["0", ...  还是 弱水三千, 只取一瓢
+
+
+//*/
+
+/*
+
+	var str = 'JavaScript2.0';
+	var pattern = /[a-zA-Z0-9]/;				// 也可以组合  []的意思就是匹配里面任意一个字符 
+	console.log(pattern.exec(str))				// ["J", ...  还是 弱水三千, 只取一瓢
+
+//*/
+
+/*
+
+	var str = '3.1415926';
+	// 假如我把能想到的字符都加进入了  除了\n没加进去
+	// var pattern = /[^\n]/;						// 语法糖就是 .  匹配除了\n的之外的任意字符
+	var pattern = /\./;								// 匹配'.' 需要转义\.
+	console.log(pattern.exec(str))					// [".", ...  还是 弱水三千, 只取一瓢
+
+
+
+//*/
+
+/*
+
+	var str = '3.1415926';
+	var pattern = /\w/;							// 语法糖表示  [a-zA-Z0-9_]    \W表示取反 [^a-zA-Z0-9_]
+	console.log(pattern.exec(str))				// ["3", ...  还是 弱水三千, 只取一瓢
+
+
+//*/
+
+
+
+/*
+
+	var str = '00544';
+	var pattern = /\d/;							// 语法糖表示  \d  表示 0-9,  \D表示取反 [^0-9]
+	console.log(pattern.exec(str))				// ["0", ...  还是 弱水三千, 只取一瓢
+
 
 //*/
 
 
 /*
 
-	var str = '	js';	
-	var pattern = /\u0009/;				// 用unicode编码代替\t
+	var str = ' ';
+	// var pattern = / /;		// ok
+	var pattern = /\s/;			// 空格和制表符的unicode的空白字符   语法糖   \S 取反 ^\s
 	console.log(pattern.exec(str))
 
-//*/
-	
-/*
-
-	// 中文在unicode编码中的范围: \u4e00-\u9fa5
-	var str = 'Alex衰';	
-	var pattern = /衰/;				
-	console.log(pattern.exec(str))
 
 //*/
+
+
 
 </script>	
 </body>
