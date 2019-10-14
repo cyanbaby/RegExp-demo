@@ -2,113 +2,189 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>选择 分组 引用</title>
+	<title>指定位置匹配 </title>
 </head>
 <body>
-
+<p class="class1 odd class2">1</p>
+<p class="even">2</p>
+<p class="odd">3</p>
+<p class="even">4</p>
 
 <script>
 
-//选择
 /*
 
-var str = 'html js';
-var pattern = /html|css|js/;		// 或
-console.log(pattern.exec(str));		// html
+var str = 'js';					// htmljs就匹配不到了
+var pattern = /^js/;			// ^表示位置   j必须从str开头匹配
+console.log(pattern.exec(str));	// ["js", index: 0, input: "js",
+								// 字符类里面的[^0-9] 除了0-9的任意字符  别  搞混了
+//*/
+
+
+/*
+
+var str = 'htmljs';				// htmljs 就能匹配上了,  但是 html js css 中间匹配不上
+var pattern = /js$/;			// 末尾位置一定要是s  s前面一定要是j
+console.log(pattern.exec(str));	// ["js", index: 4,
+
 
 //*/
 
 /*
 
-var str = 'js html';
-var pattern = /html|css|js/;		// 或
-console.log(pattern.exec(str));		// js
-
-//*/
-
-/*
-
-var str = 'ab';
-var pattern = /a|ab|/;				// 或
-console.log(pattern.exec(str));		// a
-
-//*/
-
-
-//分组
-
-/*
-
-var str = 'abab';
-// var pattern = /ab+/;				// 为什么不是abab呢   +只能影响 b+
- var pattern = /(ab)+/;
-console.log(pattern.exec(str));		// (2) ["abab", "ab", index: 0
+// 正向思维  全是数字
+var str = '110119120';			// 11011912a0
+var pattern = /^\d+$/;			// 
+console.log(pattern.exec(str));	
+console.log(pattern.test(str));	// true
 
 //*/
 
 
 /*
 
-var str = 'abcd';
-var pattern = /(ab)c/;
-console.log(pattern.exec(str));		// (2) ["abc", "ab",]
+// 逆向思维 有一个不全是数字
+var str = '110119120';			// 11011912a0
+var pattern = /\D/;				// 
+console.log(!(pattern.test(str)));	// true
 
 //*/
 
 
+// 单词边界
+
 /*
 
-var str = 'abcd';
-var pattern = /(?:ab)c/;			// ?:表示(ab)这个分组不用捕获了
-console.log(pattern.exec(str));		// ["abc", index: 0,
+// var str = 'js';
+var str = '@@@js@@@';
+var pattern = /\bjs\b/;			// \bjs 行首单词边界  js\b 行尾单词边界
+console.log(pattern.exec(str));	
+
 
 //*/
 
 
-
-/*
-
-var str = 'abcd';
-var pattern = /(ab)(c)/;			// 
-console.log(pattern.exec(str));		// (3) ["abc", "ab", "c",
-
-//*/
+//*
 
 
 /*
 
-var str = 'abcd';
-var pattern = /(a(b(c)))/;			// 
-console.log(pattern.exec(str));		// (4) ["abc", "abc", "bc", "c", index: 0
-
-//*/
+var oddP = getByClassName('odd')
+var evenP = getByClassName('even')
 
 
-// 引用
-// index 表示 匹配到的值 起始位置
-// input 表示 被匹配到的字符串
-/*
-
-var str = 'ab cd ab';
-// var pattern = /(ab) cd ab/;	 	// 
-var pattern = /(ab) cd \1/;			// 上面的语法糖  \1代表第一个分组
-console.log(pattern.exec(str));		// ["ab cd ab", "ab",
+for(var i = 0; i < oddP.length; i++) {
+	oddP[i].style.backgroundColor = 'royalblue';
+}
+for(var i = 0; i < evenP.length; i++) {
+	evenP[i].style.backgroundColor = 'yellow';
+}
 
 //*/
 
 /*
 
-// 匹配<p>标签之间的内容
-var str = '<p><a>这是一段文字</a></p>';
-// var pattern = /<[a-zA-Z]+>(.*?)<\/[a-zA-Z]+>/;	// 上面的语法糖  \1代表第一个分组
-var pattern = /<([a-zA-Z]+)>(.*?)<\/\1>/;			// 上面的语法糖  \1代表第一个分组
-console.log(pattern.exec(str));						// (3) ["<p><a>这是一段文字</a></p>", "p", "<a>这是一段文字</a>"
+// 版本3 单词边界
+function getByClassName(className, parentNode) {
+	// 因为现在test浏览器都支持, 所以取反
+	if(!document.getElementsByClassName) {		
+		console.log(1)
+		return document.getElementsByClassName(className);
+	}
+	else {
+		parentNode = parentNode || document;
+		var nodeList = [];
+		var allNodes = parentNode.getElementsByTagName('*')
+		// "odd.."  "..odd" ".. odd .."
+		// var pattern = new RegExp('(^|\\s+)'+ className +'($|\\s)')
+		var pattern = new RegExp('\\b'+ className +'\\b')
+
+		for(var i = 0; i < allNodes.length; i++) {
+			// if(allNodes[i].className === className) {
+			if(pattern.test(allNodes[i].className)) {
+				nodeList.push(allNodes[i]);
+			}
+		}
+
+		return nodeList;
+	}
+}
+
+*/
+
+/*
+
+// 版本2
+function getByClassName(className, parentNode) {
+	// 因为现在test浏览器都支持, 所以取反
+	if(!document.getElementsByClassName) {		
+		console.log(1)
+		return document.getElementsByClassName(className);
+	}
+	else {
+		parentNode = parentNode || document;
+		var nodeList = [];
+		var allNodes = parentNode.getElementsByTagName('*')
+		// "odd.."  "..odd" ".. odd .."
+		var pattern = new RegExp('(^|\\s+)'+ className +'($|\\s)')
+
+		for(var i = 0; i < allNodes.length; i++) {
+			// if(allNodes[i].className === className) {
+			if(pattern.test(allNodes[i].className)) {
+				nodeList.push(allNodes[i]);
+			}
+		}
+
+		return nodeList;
+	}
+}
+
+*/
 
 
-//*/
+/*
+// 版本1
+function getByClassName(className, parentNode) {
+	// 因为现在test浏览器都支持, 所以取反
+	if(!document.getElementsByClassName) {		
+		console.log(1)
+		return document.getElementsByClassName(className);
+	}
+	else {
+		parentNode = parentNode || document;
+		var nodeList = [];
+		var allNodes = parentNode.getElementsByTagName('*')
 
+		for(var i = 0; i < allNodes.length; i++) {
+			if(allNodes[i].className === className) {
+				nodeList.push(allNodes[i]);
+			}
+		}
 
+		return nodeList;
+	}
+}
+*/
 
+// 前瞻性匹配
+
+/*
+
+var str = 'javascript';
+var pattern = /java(?=script)/;		// 在javascript中匹配java
+console.log(pattern.exec(str));	
+
+*/
+
+/*
+var str = 'javascript';
+var pattern = /java(?!script)/;		// java后面如果是script就不匹配
+console.log(pattern.exec(str));	
+*/
+
+var str = 'javascript';
+var pattern = /java(?!script)/;		// java后面如果是script就不匹配
+console.log(pattern.exec(str));	
 
 
 </script>	
