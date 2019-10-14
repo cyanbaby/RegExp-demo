@@ -1,6 +1,6 @@
 # RegExp-demo
 
-> RegExp实例方法和全局匹配
+> RegExp实例属性
 
 ## Build Setup
 

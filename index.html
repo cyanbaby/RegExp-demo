@@ -5,96 +5,59 @@
 	<title>RegExp实例方法和全局匹配</title>
 </head>
 <body>
-<p class="class1 odd class2">1</p>
-<p class="even">2</p>
-<p class="odd">3</p>
-<p class="even">4</p>
+
 
 <script>
 
-// 实例方法
-// pattern.exec(str)
-// pattern.test(str) 
-
-// new RegExp('\\b' + claasName )	需要转义\
-
-
 /*
 
+//RegExp实例属性
 var str = 'js js js';
-var pattern = /js/g;
 
-console.log(pattern.exec(str));		// ["js", index: 0, input: "js js js", groups: undefined]
-console.log(pattern.exec(str));		// ["js", index: 3, input: "js js js", groups: undefined]
-console.log(pattern.exec(str));		// ["js", index: 6, input: "js js js", groups: undefined]
-console.log(pattern.exec(str));		// null
-// 涉及到了pattern.lastIndex属性  非全局匹配的时候都是0, 一但是全局匹配, 每次lastIndex属性就是匹配到的值的下一个位置, 找到null之后将pattern.lastIndex重置为0
-console.log(pattern.exec(str));		// ["js", index: 0, input: "js js js", groups: undefined]
+var pattern = /js/ig;
+console.log(pattern.ignoreCase);	// true	判断regexp有没有i
+console.log(pattern.global);		// true	判断regexp有没有g
+console.log(pattern.multiline);		// false判断regexp有没有m
+console.log(pattern.lastIndex);		// 0
+console.log(pattern.source);		// js	返回字面量形式对应的字符串
 
+
+pattern = new RegExp('\\b','i')		
+console.log(pattern.source);		// \b new RegExp() 更直观一点, 
 
 //*/
 
-/*
+// 构造函数属性
 
 var str = 'js js js';
 var pattern = /(j)s/;
-console.log(pattern.exec(str));		// (2) ["js", "j", index: 0, input: "js js js", groups: ..
-console.log(pattern.exec(str));		// (2) ["js", "j", index: 0, input: "js js js", groups: ..
-console.log(pattern.exec(str));		// (2) ["js", "j", index: 0, input: "js js js", groups: ..
-console.log(pattern.exec(str));		// (2) ["js", "j", index: 0, input: "js js js", groups: ..
+pattern.exec(str);
 
+//RegExp.$_  RegExp['$_'] 相当于input  
+console.log(RegExp.input)		// js js js 上面的exec()调用了, 构造函数的属性才会被填充进去值
 
-//*/
+// RegExp['$&']
+console.log(RegExp.lastMatch)	// js 最近一次匹配到的字符
 
+// RegExp['&`']
+console.log(RegExp.leftContext)	// '' 最近一次匹配到的字符 左边 剩余的字符
 
+// RegExp["$'"]
+console.log(RegExp.rightContext)//  js js 最近一次匹配到的字符 左边 剩余的字符
+
+// RegExp["$+"]
+console.log(RegExp.lastParen)	//  j 最近一次匹配到子选项(通过分组)
+
+console.log(RegExp.$1);			// j
 /*
 
-var str = 'js js js';
-var pattern = /(j)s/g;
-console.log(pattern.exec(str));		// (2) ["js", "j", index: 0, input: "js js js"..
-console.log(pattern.exec(str));		// (2) ["js", "j", index: 3, input: "js js js"..
-console.log(pattern.exec(str));		// (2) ["js", "j", index: 6, input: "js js js"..
-console.log(pattern.exec(str));		// null
+exec
+/\1\2/ 代表分组
 
-//*/
+console.log(RegExp.$1);
 
-/*
+*/
 
-var str = '1.js 2.js 3.js';
-var pattern = /js/g;
-var total = 0,
-	match = '',
-	result;
-
-while((result = pattern.exec(str)) != null) {
-	total++;
-	match += '第' + total + '个匹配到的是: ' + result[0] + ', 它的位置是: ' + result.index + '\n';
-}
-
-match += "共找到" + total + '处匹配';
-
-console.log(str);		// 1.js 2.js 3.js
-
-console.log(match);
-// 第1个匹配到的是: js, 它的位置是: 2
-// 第2个匹配到的是: js, 它的位置是: 7
-// 第3个匹配到的是: js, 它的位置是: 12
-
-//*/
-
-/*
-
-
-// pattern.test()全局匹配下lastIndex属性和exec()是一样的，只是返回值不一样而已
-
-var pattern = new RegExp('a\\nb');
-console.log(pattern.toString());		// 返回正则表达式的字面量的形式: 	/a\nb/   
-console.log(pattern.toLocaleString());	// 返回正则表达式的字面量的形式(具有本地特色): 	/a\nb/   
-
-console.log(pattern.valueOf());			// 	返回正则本身: /a\nb/  
-console.log(pattern.valueOf() === pattern);		// 	true
-
-//*/
 
 
 </script>	
