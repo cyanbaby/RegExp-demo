@@ -1,6 +1,6 @@
 # RegExp-demo
 
-> RegExp实例属性
+> String对象中与正则相关得分方法之 search, match, split, replace
 
 ## Build Setup
 

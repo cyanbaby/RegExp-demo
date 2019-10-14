@@ -2,62 +2,200 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>RegExp实例方法和全局匹配</title>
+	<title>String对象中与正则相关得分方法之 search, match, split, replace</title>
 </head>
 <body>
 
 
 <script>
 
+
 /*
 
-//RegExp实例属性
-var str = 'js js js';
-
-var pattern = /js/ig;
-console.log(pattern.ignoreCase);	// true	判断regexp有没有i
-console.log(pattern.global);		// true	判断regexp有没有g
-console.log(pattern.multiline);		// false判断regexp有没有m
-console.log(pattern.lastIndex);		// 0
-console.log(pattern.source);		// js	返回字面量形式对应的字符串
-
-
-pattern = new RegExp('\\b','i')		
-console.log(pattern.source);		// \b new RegExp() 更直观一点, 
+var str = "html js js";
+var pattern = /js/g;					// search有没有g都是一样的
+console.log(str.search(pattern))		// 5 在string中搜索 正则模式  返回匹配到的位置  没有匹配到返回-1
 
 //*/
 
-// 构造函数属性
 
-var str = 'js js js';
-var pattern = /(j)s/;
-pattern.exec(str);
-
-//RegExp.$_  RegExp['$_'] 相当于input  
-console.log(RegExp.input)		// js js js 上面的exec()调用了, 构造函数的属性才会被填充进去值
-
-// RegExp['$&']
-console.log(RegExp.lastMatch)	// js 最近一次匹配到的字符
-
-// RegExp['&`']
-console.log(RegExp.leftContext)	// '' 最近一次匹配到的字符 左边 剩余的字符
-
-// RegExp["$'"]
-console.log(RegExp.rightContext)//  js js 最近一次匹配到的字符 左边 剩余的字符
-
-// RegExp["$+"]
-console.log(RegExp.lastParen)	//  j 最近一次匹配到子选项(通过分组)
-
-console.log(RegExp.$1);			// j
 /*
 
-exec
-/\1\2/ 代表分组
 
-console.log(RegExp.$1);
+var str = "html js js";
+console.log(str.search('js'))			// 5 自动转换正则表达式
 
 */
 
+
+/*
+
+var str = "js js js";
+// var pattern = /js/g;					// (3) ["js", "js", "js"]
+var pattern = /js/;						// ["js", index: 0, input: "js js js", groups: undefined]  和exec很像
+console.log(str.match(pattern))			// 
+
+
+//*/
+
+/*
+
+// 上面的分组之后
+var str = "js js js";
+var pattern = /(j)s/g;					// (3) ["js", "js", "js"] 一次性全部找出, 并且没有分组..
+// var pattern = /(j)s/;				// (2) ["js", "j", index: 0, input: "js js js", groups: ..还是很像exec
+console.log(str.match(pattern))			// 
+
+
+*/
+
+
+// match VS exec
+// match只有非全局情况下, 才返回分组, 全局情况只返回所有匹配到的字符(分组就没了)
+// exec无论是否全局否返回分组, 都只会返回当前匹配到的一个内容, 而不会全部返回
+
+
+/*
+
+var str = '1.js\n2.js\n3.js';
+var pattern = /js/m;
+console.log(str);
+console.log(str.match(pattern));	// ["js", index: 2, input: "1.js↵2.js↵3.js", groups: undefined]
+
+//*/
+
+/*
+
+var str = '1.js\n2.js\n3.js';
+var pattern = /js/gm;
+console.log(str);
+console.log(str.match(pattern));	// (3) ["js", "js", "js"]
+
+*/
+
+// 还是没有场景优势啊  首尾 才有是 m场地
+
+/*
+
+var str = '1.js\n2.js\n3.js';		// 会把它当作一行
+var pattern = /js$/g;
+console.log(str);
+console.log(str.match(pattern));	// ["js"]
+
+*/
+
+/*
+
+var str = '1.js\n2.js\n3.js';
+var pattern = /js$/mg;				// 匹配到3个行尾js
+console.log(str);
+console.log(str.match(pattern));	// (3) ["js", "js", "js"]
+
+*/
+
+
+/*
+
+var str = 'js1\njs2\njs3';
+var pattern = /^js/g;				// 
+console.log(str);
+console.log(str.match(pattern));	// ["js"]
+
+*/
+
+
+/*
+
+var str = 'js1\njs2\njs3';
+var pattern = /^js/mg;				// 匹配到3个行首js
+console.log(str);
+console.log(str.match(pattern));	// (3) ["js", "js", "js"]
+
+*/
+
+/*
+
+// split和是数组的join刚好相反
+// 把字符串分割成数组
+var str = 'html,css,js';
+console.log(str.split(','));		// (3) ["html", "css", "js"]
+
+*/
+
+
+
+/*
+
+var str = 'html,css,js';
+var pattern = /,/;					// 加不加g都是一样的
+console.log(str.split(pattern));	// (3) ["html", "css", "js"]
+
+*/
+
+
+// var str = 'html,  css  ,  js';		// 得到很多空白
+// var pattern = /\s*,\s*/;
+// console.log(str.split(pattern));	// (3) ["html", "css", "js"]
+
+
+/*
+// 只能替换一个
+var str = 'I love js js';
+console.log(str.replace('js', 'html'))	// I love html js
+// console.log(str)						// I love js js
+
+*/
+
+/*
+
+var str = 'I love js js';
+var pattern = /js/g;
+
+console.log(str.replace(pattern, 'html'))	// I love html html
+
+*/
+
+
+/*
+
+var str = '1111-11-11';
+var pattern = /-/g;
+console.log(str.replace(pattern, '.'))	// 1111.11.1
+
+*/
+
+
+/*
+
+var str = 'I love js js';
+var pattern = /(js)/;
+// console.log(str.replace(pattern, '$1'));
+document.write(str.replace(pattern, '<strong style="color: red;">$1</strong>'))
+// I love <strong style="color: red;">js</strong> js
+
+//*/
+
+/*
+
+// 敏感词过滤
+// var str = '中国军队和阿扁一起办证';		// 国军 阿扁 办证
+// var pattern = /国军|阿扁|办证/g;
+// console.log(str.replace(pattern, '*'))	// 中*队和*一起*
+
+var str = '中国军队和阿扁一起办证';		// 国军 阿扁 办证
+var pattern = /国军|阿扁|办证/g;
+console.log(str.replace(pattern, function($0) {
+	// console.log($0)
+	var result = '';
+	for(var i = 0; i<$0.length; i++) {
+		result += "*";
+	}
+	return result;
+}));
+// 中**队和**一起**
+
+
+//*/
 
 
 </script>	
