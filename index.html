@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>指定位置匹配 </title>
+	<title>RegExp实例方法和全局匹配</title>
 </head>
 <body>
 <p class="class1 odd class2">1</p>
@@ -12,179 +12,89 @@
 
 <script>
 
+// 实例方法
+// pattern.exec(str)
+// pattern.test(str) 
+
+// new RegExp('\\b' + claasName )	需要转义\
+
+
 /*
 
-var str = 'js';					// htmljs就匹配不到了
-var pattern = /^js/;			// ^表示位置   j必须从str开头匹配
-console.log(pattern.exec(str));	// ["js", index: 0, input: "js",
-								// 字符类里面的[^0-9] 除了0-9的任意字符  别  搞混了
+var str = 'js js js';
+var pattern = /js/g;
+
+console.log(pattern.exec(str));		// ["js", index: 0, input: "js js js", groups: undefined]
+console.log(pattern.exec(str));		// ["js", index: 3, input: "js js js", groups: undefined]
+console.log(pattern.exec(str));		// ["js", index: 6, input: "js js js", groups: undefined]
+console.log(pattern.exec(str));		// null
+// 涉及到了pattern.lastIndex属性  非全局匹配的时候都是0, 一但是全局匹配, 每次lastIndex属性就是匹配到的值的下一个位置, 找到null之后将pattern.lastIndex重置为0
+console.log(pattern.exec(str));		// ["js", index: 0, input: "js js js", groups: undefined]
+
+
+//*/
+
+/*
+
+var str = 'js js js';
+var pattern = /(j)s/;
+console.log(pattern.exec(str));		// (2) ["js", "j", index: 0, input: "js js js", groups: ..
+console.log(pattern.exec(str));		// (2) ["js", "j", index: 0, input: "js js js", groups: ..
+console.log(pattern.exec(str));		// (2) ["js", "j", index: 0, input: "js js js", groups: ..
+console.log(pattern.exec(str));		// (2) ["js", "j", index: 0, input: "js js js", groups: ..
+
+
 //*/
 
 
 /*
 
-var str = 'htmljs';				// htmljs 就能匹配上了,  但是 html js css 中间匹配不上
-var pattern = /js$/;			// 末尾位置一定要是s  s前面一定要是j
-console.log(pattern.exec(str));	// ["js", index: 4,
-
+var str = 'js js js';
+var pattern = /(j)s/g;
+console.log(pattern.exec(str));		// (2) ["js", "j", index: 0, input: "js js js"..
+console.log(pattern.exec(str));		// (2) ["js", "j", index: 3, input: "js js js"..
+console.log(pattern.exec(str));		// (2) ["js", "j", index: 6, input: "js js js"..
+console.log(pattern.exec(str));		// null
 
 //*/
 
 /*
 
-// 正向思维  全是数字
-var str = '110119120';			// 11011912a0
-var pattern = /^\d+$/;			// 
-console.log(pattern.exec(str));	
-console.log(pattern.test(str));	// true
+var str = '1.js 2.js 3.js';
+var pattern = /js/g;
+var total = 0,
+	match = '',
+	result;
 
-//*/
-
-
-/*
-
-// 逆向思维 有一个不全是数字
-var str = '110119120';			// 11011912a0
-var pattern = /\D/;				// 
-console.log(!(pattern.test(str)));	// true
-
-//*/
-
-
-// 单词边界
-
-/*
-
-// var str = 'js';
-var str = '@@@js@@@';
-var pattern = /\bjs\b/;			// \bjs 行首单词边界  js\b 行尾单词边界
-console.log(pattern.exec(str));	
-
-
-//*/
-
-
-//*
-
-
-/*
-
-var oddP = getByClassName('odd')
-var evenP = getByClassName('even')
-
-
-for(var i = 0; i < oddP.length; i++) {
-	oddP[i].style.backgroundColor = 'royalblue';
-}
-for(var i = 0; i < evenP.length; i++) {
-	evenP[i].style.backgroundColor = 'yellow';
+while((result = pattern.exec(str)) != null) {
+	total++;
+	match += '第' + total + '个匹配到的是: ' + result[0] + ', 它的位置是: ' + result.index + '\n';
 }
 
+match += "共找到" + total + '处匹配';
+
+console.log(str);		// 1.js 2.js 3.js
+
+console.log(match);
+// 第1个匹配到的是: js, 它的位置是: 2
+// 第2个匹配到的是: js, 它的位置是: 7
+// 第3个匹配到的是: js, 它的位置是: 12
+
 //*/
 
 /*
 
-// 版本3 单词边界
-function getByClassName(className, parentNode) {
-	// 因为现在test浏览器都支持, 所以取反
-	if(!document.getElementsByClassName) {		
-		console.log(1)
-		return document.getElementsByClassName(className);
-	}
-	else {
-		parentNode = parentNode || document;
-		var nodeList = [];
-		var allNodes = parentNode.getElementsByTagName('*')
-		// "odd.."  "..odd" ".. odd .."
-		// var pattern = new RegExp('(^|\\s+)'+ className +'($|\\s)')
-		var pattern = new RegExp('\\b'+ className +'\\b')
 
-		for(var i = 0; i < allNodes.length; i++) {
-			// if(allNodes[i].className === className) {
-			if(pattern.test(allNodes[i].className)) {
-				nodeList.push(allNodes[i]);
-			}
-		}
+// pattern.test()全局匹配下lastIndex属性和exec()是一样的，只是返回值不一样而已
 
-		return nodeList;
-	}
-}
+var pattern = new RegExp('a\\nb');
+console.log(pattern.toString());		// 返回正则表达式的字面量的形式: 	/a\nb/   
+console.log(pattern.toLocaleString());	// 返回正则表达式的字面量的形式(具有本地特色): 	/a\nb/   
 
-*/
+console.log(pattern.valueOf());			// 	返回正则本身: /a\nb/  
+console.log(pattern.valueOf() === pattern);		// 	true
 
-/*
-
-// 版本2
-function getByClassName(className, parentNode) {
-	// 因为现在test浏览器都支持, 所以取反
-	if(!document.getElementsByClassName) {		
-		console.log(1)
-		return document.getElementsByClassName(className);
-	}
-	else {
-		parentNode = parentNode || document;
-		var nodeList = [];
-		var allNodes = parentNode.getElementsByTagName('*')
-		// "odd.."  "..odd" ".. odd .."
-		var pattern = new RegExp('(^|\\s+)'+ className +'($|\\s)')
-
-		for(var i = 0; i < allNodes.length; i++) {
-			// if(allNodes[i].className === className) {
-			if(pattern.test(allNodes[i].className)) {
-				nodeList.push(allNodes[i]);
-			}
-		}
-
-		return nodeList;
-	}
-}
-
-*/
-
-
-/*
-// 版本1
-function getByClassName(className, parentNode) {
-	// 因为现在test浏览器都支持, 所以取反
-	if(!document.getElementsByClassName) {		
-		console.log(1)
-		return document.getElementsByClassName(className);
-	}
-	else {
-		parentNode = parentNode || document;
-		var nodeList = [];
-		var allNodes = parentNode.getElementsByTagName('*')
-
-		for(var i = 0; i < allNodes.length; i++) {
-			if(allNodes[i].className === className) {
-				nodeList.push(allNodes[i]);
-			}
-		}
-
-		return nodeList;
-	}
-}
-*/
-
-// 前瞻性匹配
-
-/*
-
-var str = 'javascript';
-var pattern = /java(?=script)/;		// 在javascript中匹配java
-console.log(pattern.exec(str));	
-
-*/
-
-/*
-var str = 'javascript';
-var pattern = /java(?!script)/;		// java后面如果是script就不匹配
-console.log(pattern.exec(str));	
-*/
-
-var str = 'javascript';
-var pattern = /java(?!script)/;		// java后面如果是script就不匹配
-console.log(pattern.exec(str));	
+//*/
 
 
 </script>	
