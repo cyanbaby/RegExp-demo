@@ -2,120 +2,162 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>正则表达式测试工具</title>
-	<style>
-		#regexp {
-			width: 650px;
-			margin: 100px auto;
-			font-size: 14px;
-		}
-		#regexp .title {
-			color: #777;
-			font-size: 24px;
-			text-align: center;
-		}
-		#regexp .textbox {
-			width: 638px;
-			height: 150px;
-			border: 1px solid #ccc;
-			border-radius: 5px;
-			padding: 5px;
-			resize: none;
-		}
-		#regexp .readonly {
-			background: #eee;
-		}
-		#regexp .textfield {
-			width: 215px;
-			padding: 5px;
-			border: 1px solid #ccc;
-		}
-	</style>
+	<title>验证QQ号,昵称,密码,去掉首位空白字符,封装trim,转驼峰toCameCase..</title>
 </head>
 <body>
-	<div id="regexp">
-		<h1 class="title">正则表达式测试工具</h1>
-		<textarea id="userText" class="textbox" placeholder="在此输入待匹配文本"></textarea>
-		<p>
-			正则表达式：<input type="text"  id="userRegExp" class="textfield" placeholder="在此输入正则表达式" />
-			<input type="checkbox" name="userModifier" value="i" />忽略大小写
-			<input type="checkbox" name="userModifier" value="g" />全局匹配
-			<input type="checkbox" name="userModifier" value="m" />多行匹配
-			<input type="button" id="matchingBtn" value="测试匹配" />
-		</p>
-		匹配结果：
-		<div id="matchingResult" class="textbox readonly" ></div>
 
-		<p>
-			替换文本：<input type="text"  id="userReplaceText" class="textfield" placeholder="在此输入替换文本" />
-			<input type="button" id="replaceBtn" value="替换" />
-		</p>
-		替换结果：
-		<div id="replaceResult" class="textbox readonly" ></div>
-
-	</div>
 
 <script>
-	var userText 		= document.getElementById('userText'),
-		userRegExp 		= document.getElementById('userRegExp'),
-		userModifier	= document.getElementsByName('userModifier'),
-		matchingBtn 	= document.getElementById('matchingBtn'),
-		matchingResult 	= document.getElementById('matchingResult'),
-		userReplaceText = document.getElementById('userReplaceText'),
-		replaceBtn 		= document.getElementById('replaceBtn'),
-		replaceResult 	= document.getElementById('replaceResult');
 
-	var pattern,
-		modifier = '';
+/*
 
-	for(var i = 0; i < userModifier.length; i++) {
-		userModifier[i].onclick = function() {
-			modifier = '';
-			for(var j = 0; j < userModifier.length; j++) {
-				if(userModifier[j].checked) {
-					modifier += userModifier[j].value;
-				}
-			}
-		}
-	}
+1. QQ验证规则: 
+				全是数字				
+				首位不能为0
+				最少5位数(10000)
+				目前最多11位?  12,13..	  	
+	/^[1-9]\d{4,10}$/ 
+	/^[1-9]\d{4,}$/ 	
+*/
 
 
+/*
 
-	matchingBtn.onclick = function() {
-		if(!userText.value) {
-			alert('请输入待匹配的文本！');
-			userText.focus();
-			return;
-		}
-		if(!userRegExp.value) {
-			alert('请输入正则表达式！');
-			userRegExp.focus();
-			return;
-		}		
-		pattern = new RegExp('(' + userRegExp.value + ')', modifier);
-		matchingResult.innerHTML = pattern.exec(userText.value) ? userText.value.replace(pattern, '<span style="background-color: yellow;">$1</span>') : '(没有匹配)';
-	}
+2. 昵称验证规则: 
+				中、英文,数字,下划线
+				2-18位			
+	/[\u4e00-\u9fa5a-zA-Z0-9]{2,18}/			
+	/^[\u4e00-\u9fa5a-zA-Z0-9]{2,18}$/			
+	/[\u4e00-\u9fa5\w]{2,18}/			
+		
+*/
 
-	replaceBtn.onclick = function() {
-		if(!userText.value) {
-			alert('请输入待匹配的文本！');
-			userText.focus();
-			return;
-		}
-		if(!userRegExp.value) {
-			alert('请输入正则表达式！');
-			userRegExp.focus();
-			return;
-		}		
-		if(!userReplaceText.value) {
-			alert('请输入要替换成的文本！');
-			userReplaceText.focus();
-			return;
-		}	
-		pattern = new RegExp('(' + userRegExp.value + ')', modifier);
-		replaceResult.innerHTML = userText.value.replace(pattern, '<span style="color: red;">'+ userReplaceText.value +'</span>');
-	}
+/*
 
+3. 密码验证规则: 
+				6-16位
+				区分大小写
+				不能为空格(制表符)	用\s(空白字符)
+		
+	/^\S{6,16}$/	
+	/^[\w~!@#$%^[\]]{6,16}$/	//	穷举
+*/
+
+
+//*
+
+// 4. 去除首尾空白
+// var str = '    Alex    ';
+// var pattern = /^\s*/;
+// console.log('|' + str.replace(pattern, '') + '|');	// |Alex    |
+
+// var str = 'Alex    ';
+// var pattern = /^\s+/;	// 这里用+下面不替换直接返回str
+// console.log('|' + str.replace(pattern, '') + '|')		// |Alex    |
+
+
+// var str = '    Alex    ';
+// var pattern = /\s+$/;	// 这里用+下面不替换直接返回str
+// console.log('|' + str.replace(pattern, '') + '|')			// |    Alex|
+
+
+// 做法1
+// var str = '    Alex    ';
+// var pattern = /^\s+|\s+$/g;		// g
+// console.log('|' + str.replace(pattern, '') + '|')			// |Alex|
+
+
+
+// 做法2 做法1时间4倍左右，不用高大全的正则表达式 性能为王
+// var str = '    Alex    ';
+// var pattern1 = /^\s+/;		// 
+// var pattern2 = /\s+$/;		// 
+// console.log('|' + str.replace(pattern1, '').replace(pattern2, '') + '|')			// |Alex|
+
+
+
+
+//*/
+
+/*
+
+// PHP很多语言元生就有  还可以细分trimLeft ..right 然后组合trim
+function trim(str) {
+	return str.replace(/^\s+/,'').replace(/\s+$/,'');
+}
+
+var str = '     Alex   ';
+
+console.log('|'+ trim(str) +'|');
+
+//*/
+
+
+/*
+
+// 5. 转驼峰
+		// css: background-color: red;
+		// js: elem.style.backgroundColor = 'red'
+		// jquery: $(elem).css('background-color','red')
+
+var str = 'background-color';
+var pattern = /-([a-z])/gi;
+console.log(str.replace(pattern,function(all, letter){
+	return letter.toUpperCase();
+}))		
+
+//*/
+
+/*
+
+// 转驼峰toCameCase
+function toCameCase(str) {
+	return str.replace(pattern,function(all, letter){
+		return letter.toUpperCase();
+	})
+}
+
+*/
+
+
+// 6. 匹配HTML标签
+// var str = '<p class="odd" id="odd">123</p>';
+// var pattern = /<\/?[a-zA-Z]+(\s+[a-zA-Z]+=".*")*>/g;		// 正向思维
+// console.log(str.match(pattern))							// (2) ["<p class="odd" id="odd">", "</p>"]
+
+// var str = '<p class="odd" id="odd">123</p>';
+// var pattern = /<[^>]+>/g;		// 逆向思维		特例情况不允许
+// console.log(str.match(pattern))								// (2) ["<p class="odd" id="odd">", "</p>"]
+
+
+// var str = '<input type="text" value=">" name="username" />';
+// var pattern = /<[^>]+>/g;		// 逆向思维		特例情况不允许
+// console.log(str.match(pattern))								// ["<input type="text" value=">"] username不见了
+
+
+// var str = '<input type="text" value=">" name="username" />';
+// var pattern = /<([^"'>]|"[^"]*"|'[^']*')*>/g;		//
+// var pattern = /<(?:[^"'>]|"[^"]*"|'[^']*')*>/g;		//
+// console.log(str.match(pattern))								// ["<input type="text" value=">" name="username" />"]
+
+
+// var str = '<input type="text" value=">" name="username" />';
+// var pattern = /<(?:[^"'>]|(["'])[^"']*\1)*>/g;		//
+// console.log(str.match(pattern))								// ["<input type="text" value=">" name="username" />"]
+
+
+
+//*
+// 7. 邮箱
+// 		alex@yahoo.com.cn 
+// 		alex_1@yahoo.com.cn 
+// 		abc_1.alex.com@yahoo.com.cn 
+
+/(\w+\.)*(\w+\.)@(\w+\.)+([a-z])/i
+/(?:\w+\.)*\w+\.@(?:\w+\.)+[a-z]/i
+
+//*/
+// 不想写了 太罗嗦了 直接百度 多看几遍 多练习 多总结
 
 </script>	
 </body>
