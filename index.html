@@ -22,6 +22,9 @@
 			padding: 5px;
 			resize: none;
 		}
+		#regexp .readonly {
+			background: #eee;
+		}
 		#regexp .textfield {
 			width: 215px;
 			padding: 5px;
@@ -41,7 +44,15 @@
 			<input type="button" id="matchingBtn" value="测试匹配" />
 		</p>
 		匹配结果：
-		<textarea id="matchingResult" class="textbox" disabled="disabled"></textarea>
+		<div id="matchingResult" class="textbox readonly" ></div>
+
+		<p>
+			替换文本：<input type="text"  id="userReplaceText" class="textfield" placeholder="在此输入替换文本" />
+			<input type="button" id="replaceBtn" value="替换" />
+		</p>
+		替换结果：
+		<div id="replaceResult" class="textbox readonly" ></div>
+
 	</div>
 
 <script>
@@ -49,7 +60,11 @@
 		userRegExp 		= document.getElementById('userRegExp'),
 		userModifier	= document.getElementsByName('userModifier'),
 		matchingBtn 	= document.getElementById('matchingBtn'),
-		matchingResult 	= document.getElementById('matchingResult');
+		matchingResult 	= document.getElementById('matchingResult'),
+		userReplaceText = document.getElementById('userReplaceText'),
+		replaceBtn 		= document.getElementById('replaceBtn'),
+		replaceResult 	= document.getElementById('replaceResult');
+
 	var pattern,
 		modifier = '';
 
@@ -64,6 +79,8 @@
 		}
 	}
 
+
+
 	matchingBtn.onclick = function() {
 		if(!userText.value) {
 			alert('请输入待匹配的文本！');
@@ -75,9 +92,31 @@
 			userRegExp.focus();
 			return;
 		}		
-		pattern = new RegExp(userRegExp.value, modifier);
-		matchingResult.value = pattern.exec(userText.value) || '(没有匹配)';
+		pattern = new RegExp('(' + userRegExp.value + ')', modifier);
+		matchingResult.innerHTML = pattern.exec(userText.value) ? userText.value.replace(pattern, '<span style="background-color: yellow;">$1</span>') : '(没有匹配)';
 	}
+
+	replaceBtn.onclick = function() {
+		if(!userText.value) {
+			alert('请输入待匹配的文本！');
+			userText.focus();
+			return;
+		}
+		if(!userRegExp.value) {
+			alert('请输入正则表达式！');
+			userRegExp.focus();
+			return;
+		}		
+		if(!userReplaceText.value) {
+			alert('请输入要替换成的文本！');
+			userReplaceText.focus();
+			return;
+		}	
+		pattern = new RegExp('(' + userRegExp.value + ')', modifier);
+		replaceResult.innerHTML = userText.value.replace(pattern, '<span style="color: red;">'+ userReplaceText.value +'</span>');
+	}
+
+
 </script>	
 </body>
 </html>
