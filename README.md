@@ -1,6 +1,6 @@
 # RegExp-demo
 
-> 字符类
+> 重复-量词
 
 ## Build Setup
 
