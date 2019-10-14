@@ -2,29 +2,65 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>重复 量词</title>
+	<title>选择 分组 引用</title>
 </head>
 <body>
 
 
 <script>
 
+//选择
 /*
 
-// 正则默认匹配是贪婪匹配(和量词相关)
-var str = 'aaa';	
-var pattern = /a+/;				// a一次或者更多
-console.log(pattern.exec(str))	// aaa	
-
+var str = 'html js';
+var pattern = /html|css|js/;		// 或
+console.log(pattern.exec(str));		// html
 
 //*/
 
 /*
 
-// 将贪婪匹配 改成 非贪婪匹配  在量词后面加一个?就可以了
-var str = 'aaa';	
-var pattern = /a+?/;			// a一次或者更多  加了 ? 就是非贪婪模式
-console.log(pattern.exec(str))	// a	
+var str = 'js html';
+var pattern = /html|css|js/;		// 或
+console.log(pattern.exec(str));		// js
+
+//*/
+
+/*
+
+var str = 'ab';
+var pattern = /a|ab|/;				// 或
+console.log(pattern.exec(str));		// a
+
+//*/
+
+
+//分组
+
+/*
+
+var str = 'abab';
+// var pattern = /ab+/;				// 为什么不是abab呢   +只能影响 b+
+ var pattern = /(ab)+/;
+console.log(pattern.exec(str));		// (2) ["abab", "ab", index: 0
+
+//*/
+
+
+/*
+
+var str = 'abcd';
+var pattern = /(ab)c/;
+console.log(pattern.exec(str));		// (2) ["abc", "ab",]
+
+//*/
+
+
+/*
+
+var str = 'abcd';
+var pattern = /(?:ab)c/;			// ?:表示(ab)这个分组不用捕获了
+console.log(pattern.exec(str));		// ["abc", index: 0,
 
 //*/
 
@@ -32,29 +68,45 @@ console.log(pattern.exec(str))	// a
 
 /*
 
-var str = 'aaab';	
-var pattern = /a+b/;			// 贪婪匹配是 a+是匹配前三个aaa + 一个b
-console.log(pattern.exec(str))	// aaab	
+var str = 'abcd';
+var pattern = /(ab)(c)/;			// 
+console.log(pattern.exec(str));		// (3) ["abc", "ab", "c",
 
 //*/
 
 
 /*
 
-// 为什么不是ab呢
-// 正则是从str中第一个字符"可能匹配的"位置开始  尽可能少不一定是绝对的一个  
-var str = 'aaab';	
-var pattern = /a+?b/;			// 贪婪匹配是 a+是匹配前三个aaa + 一个b
-console.log(pattern.exec(str))	// aaab	  
+var str = 'abcd';
+var pattern = /(a(b(c)))/;			// 
+console.log(pattern.exec(str));		// (4) ["abc", "abc", "bc", "c", index: 0
 
 //*/
 
 
-// 匹配第一个td中间的内容包括第一个td
-var str = '<td><p>a</p></td><td><p>b<p></td>';	
-// var pattern = /<td>.*<\/td>/;			// 默认贪婪  <td><p>a</p></td><td><p>b<p></td>
-var pattern = /<td>.*?<\/td>/;			// 尽可能少的匹配
-console.log(pattern.exec(str))			// ["<td><p>a</p></td>",
+// 引用
+// index 表示 匹配到的值 起始位置
+// input 表示 被匹配到的字符串
+/*
+
+var str = 'ab cd ab';
+// var pattern = /(ab) cd ab/;	 	// 
+var pattern = /(ab) cd \1/;			// 上面的语法糖  \1代表第一个分组
+console.log(pattern.exec(str));		// ["ab cd ab", "ab",
+
+//*/
+
+/*
+
+// 匹配<p>标签之间的内容
+var str = '<p><a>这是一段文字</a></p>';
+// var pattern = /<[a-zA-Z]+>(.*?)<\/[a-zA-Z]+>/;	// 上面的语法糖  \1代表第一个分组
+var pattern = /<([a-zA-Z]+)>(.*?)<\/\1>/;			// 上面的语法糖  \1代表第一个分组
+console.log(pattern.exec(str));						// (3) ["<p><a>这是一段文字</a></p>", "p", "<a>这是一段文字</a>"
+
+
+//*/
+
 
 
 
