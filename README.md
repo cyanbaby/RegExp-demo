@@ -1,6 +1,6 @@
 # RegExp-demo
 
-> 重复-量词
+> 非贪婪模式重复
 
 ## Build Setup
 
